@@ -93,7 +93,7 @@ X = pd.read_csv(path, encoding='utf-8')
 n_train = 200
 n_damaged = 320
 n_repeat = 20
-b = 0.1
+b = 0.001
 missing_method = 'MCAR'    # MCAR or mode_selected
 recon_method = 'optimal'   # 'optimal' or 'latent_mean'
 
@@ -203,9 +203,11 @@ for missing_ratio in missing_ratio_list:
         # --------------------------------------------------
         n_normal = n_damaged - n_train   # 120
 
-        X_res_train = train_residual
-        X_res_normal = test_residual[:n_normal, :]
-        X_res_damaged = test_residual[n_normal:, :]
+        cols_keep = [0, 2, 3, 4]
+
+        X_res_train = train_residual[:, cols_keep]
+        X_res_normal = test_residual[:n_normal, :][:, cols_keep]
+        X_res_damaged = test_residual[n_normal:, :][:, cols_keep]
 
         # --------------------------------------------------
         # 9) PCT fit / score
